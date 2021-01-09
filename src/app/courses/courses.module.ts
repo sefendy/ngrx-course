@@ -1,3 +1,8 @@
+import { coursesReducer } from './reducers/course.reducers';
+import { StoreModule } from '@ngrx/store';
+import { CoursesEffects } from './courses.effects';
+import { EffectsModule } from '@ngrx/effects';
+import { CoursesResolver } from './courses.resolver';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HomeComponent} from './home/home.component';
@@ -30,7 +35,10 @@ import {compareLessons, Lesson} from './model/lesson';
 export const coursesRoutes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
+    resolve: {
+      courses: CoursesResolver
+    }
 
   },
   {
@@ -58,30 +66,25 @@ export const coursesRoutes: Routes = [
     MatDatepickerModule,
     MatMomentDateModule,
     ReactiveFormsModule,
-    RouterModule.forChild(coursesRoutes)
+    RouterModule.forChild(coursesRoutes),
+    EffectsModule.forFeature([CoursesEffects]),
+    StoreModule.forFeature("courses", coursesReducer)
   ],
   declarations: [
     HomeComponent,
     CoursesCardListComponent,
     EditCourseDialogComponent,
-    CourseComponent
+    CourseComponent,
   ],
   exports: [
     HomeComponent,
     CoursesCardListComponent,
     EditCourseDialogComponent,
-    CourseComponent
+    CourseComponent,
   ],
   entryComponents: [EditCourseDialogComponent],
-  providers: [
-    CoursesHttpService
-  ]
+  providers: [CoursesHttpService, CoursesResolver],
 })
 export class CoursesModule {
-
-  constructor() {
-
-  }
-
-
+  constructor() {}
 }
